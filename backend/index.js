@@ -27,7 +27,7 @@ app.post('/todo',async (req,res) => {
     await Todo.create({
       title : title,
       description : description,
-      id : id
+      completed : false 
     })
     console.log("todo added")
 
@@ -42,20 +42,45 @@ app.post('/todo',async (req,res) => {
 
 })
 
-app.get('/todos',(req,res) => {
+app.get('/todos',async (req,res) => {
+  try{
+
+    const allTodos = await Todo.find({});
+    return res.json({
+      Todos : allTodos
+    });
+
+  }
   
+  catch(e){
+    return res.status(500).json({
+      msg : "internal server erroe"
+    });
+
+  }
 
 })
 
-app.put('/completed',(req,res) => {
-  const id = req.body.id;
-  const response = updateTodo.safeParse(id);
+app.put('/completed',async (req,res) => {
+  const updatePayLoad = req.body;
+  const response = updateTodo.safeParse(updatePayLoad);
   if(!response.success){
      return res.status(411).json({
       msg : "wrong input"
      });
-  // update 
+  
   }
+  await Todo.updateOne({
+    _id : req.body.id,
+  },{
+    completed : true
+  });
+  res.json({
+    msg : "updated todo"
+});
+
+
+
    
 })
 

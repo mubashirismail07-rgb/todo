@@ -23,7 +23,7 @@ async function connectDB(){
 const todoSchema = new mongoose.Schema({
   title : String,
   description : String,
-  id : Boolean
+  completed : Boolean
 });
 
 const Todo = mongoose.model('Todo',todoSchema);
