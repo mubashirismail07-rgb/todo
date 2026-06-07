@@ -1,6 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 const app = express();
+const cors = require('cors'); 
 const { createTodo,updateTodo } = require("./types");
 const { connectDB,Todo } = require('./db');
 const { id } = require('zod/v4/locales');
@@ -9,6 +10,7 @@ const { id } = require('zod/v4/locales');
 connectDB();
 
 app.use(express.json());
+app.use(cors());
 
 app.post('/todo',async (req,res) => {
   const createPayLoad = req.body
@@ -38,7 +40,9 @@ app.post('/todo',async (req,res) => {
     });
 
   }
-  res.send("done");
+  res.json({
+    msg : "done"
+  });
 
 })
 
@@ -47,7 +51,7 @@ app.get('/todos',async (req,res) => {
 
     const allTodos = await Todo.find({});
     return res.json({
-      Todos : allTodos
+      todos : allTodos
     });
 
   }
